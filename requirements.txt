@@ -9,12 +9,17 @@ click-repl==0.3.0
 Django==4.2.3
 django-filter==23.2
 djangorestframework==3.14.0
+drf-yasg==1.21.7
+inflection==0.5.1
 kombu==5.3.1
+packaging==23.1
 prompt-toolkit==3.0.39
 python-dateutil==2.8.2
 pytz==2023.3
+PyYAML==6.0.1
 six==1.16.0
 sqlparse==0.4.4
 tzdata==2023.3
+uritemplate==4.1.1
 vine==5.0.0
 wcwidth==0.2.6
