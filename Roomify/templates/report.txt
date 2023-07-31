@@ -1,0 +1,26 @@
+<!-- reports.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Reservations Report</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Reservation Name</th>
+                <th>Listing Name</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation.name }}</td>
+                    <td>{{ reservation.listing.name }}</td>
+                    <td>{{ reservation.start_time }}</td>
+                    <td>{{ reservation.end_time }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

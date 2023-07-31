@@ -1,0 +1,18 @@
+<!-- reservation_results.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Reservation Results</h1>
+
+<ul>
+  {% for reservation in reservations %}
+    <li>
+      <strong>Reservation ID:</strong> {{ reservation.id }} <br>
+      <strong>Name:</strong> {{ reservation.name }} <br>
+      <strong>Duration:</strong> {{ reservation.start_date }} <br>
+    </li>
+  {% empty %}
+    <li>No reservations found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
