@@ -46,7 +46,7 @@ python3 manage.py runserver
 ```
 
 ### APIs
-you can find this list at [postman collection](hhi) and swagger ui
+you can find this list at [postman collection](https://warped-shadow-47839.postman.co/workspace/My-Workspace~39e9e21e-87cd-4f68-83c5-25f1f0d1ac51/collection/25421512-7f3048bc-4167-46bd-8c72-9b37e7f97cfc) and swagger ui
 
 ```json
 {
