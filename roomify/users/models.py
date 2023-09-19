@@ -8,7 +8,7 @@ from roomify.users.managers import UserManager
 
 class User(AbstractUser):
     """
-    Default custom user model for Roomify.
+    Default custom user model for roomify.
     If adding fields that need to be filled at user signup,
     check forms.SignupForm and forms.SocialSignupForms accordingly.
     """

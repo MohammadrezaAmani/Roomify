@@ -1,5 +1,5 @@
 """
-ASGI config for Roomify project.
+ASGI config for roomify project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

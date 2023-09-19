@@ -1,11 +1,11 @@
-# Translations for the Roomify project
+# Translations for the roomify project
 # Copyright (C) 2023 Mohammadreza Amani
 # Mohammadreza Amani <more.amani@yahoo.com>, 2023.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.2.23\n"
+"Project-Id-Version: 0.2.33\n"
 "Language: pt-BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

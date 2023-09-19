@@ -27,7 +27,7 @@ django.setup()
 
 # -- Project information -----------------------------------------------------
 
-project = "Roomify"
+project = "roomify"
 copyright = """2023, Mohammadreza Amani"""
 author = "Mohammadreza Amani"
 
