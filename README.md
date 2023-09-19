@@ -1,693 +1,97 @@
 # Roomify
 
-**reservation system via Django for [realtyna](https://realtyna.com/) task**
+reservation system via Django
 
-### Task
+[![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
+[![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-As a listing owner, I want a system for making and tracking reservations that can be handled by third-party services.
+License: MIT
 
-* The system can be used by multiple listings.
-* The system provides REST API endpoints:
--> To make reservations
--> To check if a number of rooms are available at a certain time
-* A reservation is for a name (any string) and for a certain amount of time
-* The listing owner can get an overview over the booked rooms as an HTML or TEXT report
+## Settings
 
+Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
 
-Limitations:
+## Basic Commands
 
-* Authentication / Authorization is not in the scope of this task
-* No localization needed
+### Setting Up Your Users
 
-___
-### description
+- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
 
-this project contains all of needed apis and endpoints 
+- To create a **superuser account**, use this command:
 
+      $ python manage.py createsuperuser
 
-### how to use
-after installing python and `virtualenv` create a virtual environment using `virtualenv venv` and activate it
+For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
 
+### Type checks
+
+Running type checks with mypy:
+
+    $ mypy roomify
+
+### Test coverage
+
+To run the tests, check your test coverage, and generate an HTML coverage report:
+
+    $ coverage run -m pytest
+    $ coverage html
+    $ open htmlcov/index.html
+
+#### Running tests with pytest
+
+    $ pytest
+
+### Live reloading and Sass CSS compilation
+
+Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
+
+### Celery
+
+This app comes with Celery.
+
+To run a celery worker:
 
 ```bash
-source venv/bin/activate
+cd roomify
+celery -A config.celery_app worker -l info
 ```
 
-after that just install the requirements via 
+Please note: For Celery's import magic to work, it is important _where_ the celery commands are run. If you are in the same folder with _manage.py_, you should be right.
+
+To run [periodic tasks](https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html), you'll need to start the celery beat scheduler service. You can start it as a standalone process:
 
 ```bash
-pip install requirements.txt
+cd roomify
+celery -A config.celery_app beat
 ```
 
-and run django project:
+or you can embed the beat service inside a worker with the `-B` option (not recommended for production use):
 
 ```bash
-python3 manage.py runserver
+cd roomify
+celery -A config.celery_app worker -B -l info
 ```
 
-### APIs
-you can find this list at [postman collection](https://warped-shadow-47839.postman.co/workspace/My-Workspace~39e9e21e-87cd-4f68-83c5-25f1f0d1ac51/collection/25421512-7f3048bc-4167-46bd-8c72-9b37e7f97cfc) and swagger ui
+### Email Server
 
-```json
-{
-    "swagger": "2.0",
-    "info": {
-        "title": "Reservation API",
-        "description": "API endpoints for realtynas task",
-        "contact": {
-            "email": "more.amani@yahoo.com"
-        },
-        "version": "v1"
-    },
-    "host": "127.0.0.1:8000",
-    "schemes": [
-        "http"
-    ],
-    "basePath": "/",
-    "consumes": [
-        "application/json"
-    ],
-    "produces": [
-        "application/json"
-    ],
-    "securityDefinitions": {
-        "Basic": {
-            "type": "basic"
-        }
-    },
-    "security": [
-        {
-            "Basic": []
-        }
-    ],
-    "paths": {
-        "/listings/": {
-            "get": {
-                "operationId": "listings_list",
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Listing"
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "post": {
-                "operationId": "listings_create",
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Listing"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Listing"
-                        }
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "parameters": []
-        },
-        "/listings/rooms/": {
-            "get": {
-                "operationId": "listings_rooms_list",
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Room"
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "post": {
-                "operationId": "listings_rooms_create",
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Room"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Room"
-                        }
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "parameters": []
-        },
-        "/listings/rooms/filter/": {
-            "get": {
-                "operationId": "listings_rooms_filter_list",
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": ""
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "parameters": []
-        },
-        "/listings/rooms/{id}/": {
-            "get": {
-                "operationId": "listings_rooms_read",
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Room"
-                        }
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "put": {
-                "operationId": "listings_rooms_update",
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Room"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Room"
-                        }
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "patch": {
-                "operationId": "listings_rooms_partial_update",
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Room"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Room"
-                        }
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "delete": {
-                "operationId": "listings_rooms_delete",
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "parameters": [
-                {
-                    "name": "id",
-                    "in": "path",
-                    "description": "A unique integer value identifying this room.",
-                    "required": true,
-                    "type": "integer"
-                }
-            ]
-        },
-        "/listings/{id}/": {
-            "get": {
-                "operationId": "listings_read",
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Listing"
-                        }
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "put": {
-                "operationId": "listings_update",
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Listing"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Listing"
-                        }
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "patch": {
-                "operationId": "listings_partial_update",
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Listing"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Listing"
-                        }
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "delete": {
-                "operationId": "listings_delete",
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    }
-                },
-                "tags": [
-                    "listings"
-                ]
-            },
-            "parameters": [
-                {
-                    "name": "id",
-                    "in": "path",
-                    "description": "A unique integer value identifying this listing.",
-                    "required": true,
-                    "type": "integer"
-                }
-            ]
-        },
-        "/reports/listings/{listing_id}/report/": {
-            "get": {
-                "operationId": "reports_listings_report_list",
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "search",
-                        "in": "query",
-                        "description": "A search term.",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": ""
-                    }
-                },
-                "tags": [
-                    "reports"
-                ]
-            },
-            "parameters": [
-                {
-                    "name": "listing_id",
-                    "in": "path",
-                    "required": true,
-                    "type": "string"
-                }
-            ]
-        },
-        "/reservations/": {
-            "get": {
-                "operationId": "reservations_list",
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Reservation"
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "reservations"
-                ]
-            },
-            "post": {
-                "operationId": "reservations_create",
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Reservation"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Reservation"
-                        }
-                    }
-                },
-                "tags": [
-                    "reservations"
-                ]
-            },
-            "parameters": []
-        },
-        "/reservations/filter/": {
-            "get": {
-                "operationId": "reservations_filter_list",
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": ""
-                    }
-                },
-                "tags": [
-                    "reservations"
-                ]
-            },
-            "parameters": []
-        },
-        "/reservations/{id}/": {
-            "get": {
-                "operationId": "reservations_read",
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Reservation"
-                        }
-                    }
-                },
-                "tags": [
-                    "reservations"
-                ]
-            },
-            "put": {
-                "operationId": "reservations_update",
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Reservation"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Reservation"
-                        }
-                    }
-                },
-                "tags": [
-                    "reservations"
-                ]
-            },
-            "patch": {
-                "operationId": "reservations_partial_update",
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Reservation"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/Reservation"
-                        }
-                    }
-                },
-                "tags": [
-                    "reservations"
-                ]
-            },
-            "delete": {
-                "operationId": "reservations_delete",
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    }
-                },
-                "tags": [
-                    "reservations"
-                ]
-            },
-            "parameters": [
-                {
-                    "name": "id",
-                    "in": "path",
-                    "description": "A unique integer value identifying this reservation.",
-                    "required": true,
-                    "type": "integer"
-                }
-            ]
-        }
-    },
-    "definitions": {
-        "Listing": {
-            "required": [
-                "name",
-                "owner"
-            ],
-            "type": "object",
-            "properties": {
-                "id": {
-                    "title": "Id",
-                    "type": "integer",
-                    "readOnly": true
-                },
-                "name": {
-                    "title": "Name",
-                    "type": "string",
-                    "maxLength": 100,
-                    "minLength": 1
-                },
-                "slug": {
-                    "title": "Slug",
-                    "type": "string",
-                    "maxLength": 100,
-                    "minLength": 1
-                },
-                "address": {
-                    "title": "Address",
-                    "type": "string",
-                    "maxLength": 255,
-                    "x-nullable": true
-                },
-                "description": {
-                    "title": "Description",
-                    "type": "string",
-                    "x-nullable": true
-                },
-                "owner": {
-                    "title": "Owner",
-                    "type": "string",
-                    "maxLength": 100,
-                    "minLength": 1
-                }
-            }
-        },
-        "Room": {
-            "required": [
-                "listing"
-            ],
-            "type": "object",
-            "properties": {
-                "id": {
-                    "title": "Id",
-                    "type": "integer",
-                    "readOnly": true
-                },
-                "listing": {
-                    "title": "Listing",
-                    "type": "integer"
-                },
-                "name": {
-                    "title": "Name",
-                    "type": "string",
-                    "maxLength": 100,
-                    "minLength": 1
-                },
-                "slug": {
-                    "title": "Slug",
-                    "type": "string",
-                    "maxLength": 100,
-                    "x-nullable": true
-                },
-                "description": {
-                    "title": "Description",
-                    "type": "string",
-                    "x-nullable": true
-                },
-                "price": {
-                    "title": "Price",
-                    "type": "integer"
-                }
-            }
-        },
-        "Reservation": {
-            "required": [
-                "room",
-                "start_date",
-                "end_date",
-                "guest_name",
-                "guest_email",
-                "guest_phone"
-            ],
-            "type": "object",
-            "properties": {
-                "id": {
-                    "title": "Id",
-                    "type": "integer",
-                    "readOnly": true
-                },
-                "room": {
-                    "title": "Room",
-                    "type": "integer"
-                },
-                "start_date": {
-                    "title": "Start date",
-                    "type": "string",
-                    "format": "date"
-                },
-                "end_date": {
-                    "title": "End date",
-                    "type": "string",
-                    "format": "date"
-                },
-                "guest_name": {
-                    "title": "Guest name",
-                    "type": "string",
-                    "maxLength": 100,
-                    "minLength": 1
-                },
-                "guest_email": {
-                    "title": "Guest email",
-                    "type": "string",
-                    "maxLength": 100,
-                    "minLength": 1
-                },
-                "guest_phone": {
-                    "title": "Guest phone",
-                    "type": "string",
-                    "maxLength": 100,
-                    "minLength": 1
-                }
-            }
-        }
-    }
-}
-```
+In development, it is often nice to be able to see emails that are being sent from your application. For that reason local SMTP server [Mailpit](https://github.com/axllent/mailpit) with a web interface is available as docker container.
+
+Container mailpit will start automatically when you will run all docker containers.
+Please check [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html) for more details how to start all containers.
+
+With Mailpit running, to view messages that are sent by your application, open your browser and go to `http://127.0.0.1:8025`
+
+### Sentry
+
+Sentry is an error logging aggregator service. You can sign up for a free account at <https://sentry.io/signup/?code=cookiecutter> or download and host it yourself.
+The system is set up with reasonable defaults, including 404 logging and integration with the WSGI application.
+
+You must set the DSN url in production.
+
+## Deployment
+
+The following details how to deploy this application.
+
+### Docker
+
+See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
